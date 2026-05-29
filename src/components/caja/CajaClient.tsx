@@ -303,7 +303,7 @@ export function CajaClient({ data }: { data: ResumenData }) {
       </Card>
 
       {/* KPIs secundarios */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
         <KpiCard
           title="Ventas (contado)"
           value={formatCurrency(data.totalVentasContado)}
@@ -342,7 +342,7 @@ export function CajaClient({ data }: { data: ResumenData }) {
       </div>
 
       {/* ── Layout: Formulario + Tabla ── */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6 items-start">
 
         {/* ── Registrar Gasto ── */}
         <Card className="bg-slate-900 border-slate-800">

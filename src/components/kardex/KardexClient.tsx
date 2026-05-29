@@ -192,11 +192,11 @@ export function KardexClient({ initialMovements }: { initialMovements: Movement[
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-white">Kardex</h1>
-        <p className="text-slate-400 mt-1">Registro detallado de movimientos de inventario · Clic en una fila para ver el detalle</p>
+        <p className="text-slate-400 mt-1 text-sm">Registro detallado de movimientos de inventario · Clic en una fila para ver el detalle</p>
       </div>
 
       {/* Summary KPIs */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-3 sm:gap-4">
         {(['IN', 'OUT', 'ADJUST'] as const).map((type) => {
           const cfg = TYPE_CONFIG[type]
           const Icon = cfg.icon

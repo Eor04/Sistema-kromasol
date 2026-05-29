@@ -228,23 +228,23 @@ export default async function DashboardPage() {
         <div className="absolute -top-10 -right-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-5 -left-5 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl" />
 
-        <div className="relative z-10 flex items-start justify-between flex-wrap gap-4">
+        <div className="relative z-10 flex items-start justify-between flex-wrap gap-3">
           <div>
-            <p className="text-slate-400 text-sm mb-1">{greeting}</p>
-            <h1 className="text-3xl font-black text-white tracking-tight">N & M by Kromasol</h1>
-            <p className="text-slate-400 mt-1 text-sm">
+            <p className="text-slate-400 text-xs sm:text-sm mb-1">{greeting}</p>
+            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">N &amp; M by Kromasol</h1>
+            <p className="text-slate-400 mt-1 text-xs sm:text-sm">
               {new Date().toLocaleDateString('es-BO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
             </p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-2">
             <Link href="/ventas">
-              <div className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 transition-colors text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-emerald-900/30">
-                <Zap className="h-4 w-4" /> Nueva Venta
+              <div className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 transition-colors text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold shadow-lg shadow-emerald-900/30">
+                <Zap className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> Nueva Venta
               </div>
             </Link>
             <Link href="/compras">
-              <div className="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 transition-colors text-white px-4 py-2.5 rounded-xl text-sm font-semibold">
-                <ShoppingCart className="h-4 w-4" /> Compra
+              <div className="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 transition-colors text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold">
+                <ShoppingCart className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> Compra
               </div>
             </Link>
           </div>
@@ -275,7 +275,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* ── KPI Cards ── */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
         <KpiCard
           title="Ventas este mes" value={formatCurrency(data.thisMonthTotal)}
           sub={`vs ${formatCurrency(data.lastMonthTotal)} mes anterior`}
@@ -303,7 +303,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* ── Fila principal: Gráfico + Actividad reciente ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6">
 
         {/* Gráfico de ventas (7 días) */}
         <Card className="lg:col-span-3 bg-slate-900 border-slate-800">
@@ -377,7 +377,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* ── Fila secundaria: Stock + Compras + Alertas ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
 
         {/* Stock overview */}
         <Card className="lg:col-span-2 bg-slate-900 border-slate-800">

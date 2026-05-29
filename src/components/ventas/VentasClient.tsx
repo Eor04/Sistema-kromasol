@@ -210,6 +210,8 @@ export function VentasClient({
   const removeFromCart = (cartKey: string) =>
     setCart((prev) => prev.filter((i) => i.cartKey !== cartKey))
 
+  const [mobileTab, setMobileTab] = useState<'catalogo' | 'carrito'>('catalogo')
+  const cartCount = cart.reduce((s, i) => s + i.quantity, 0)
   const total = cart.reduce((s, i) => s + i.quantity * i.unitPrice, 0)
 
   // ── Registrar venta ──
@@ -242,17 +244,42 @@ export function VentasClient({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
-        <h1 className="text-3xl font-bold text-white">Ventas</h1>
-        <p className="text-slate-400 mt-1">Selecciona productos del catálogo y registra la venta</p>
+        <h1 className="text-2xl sm:text-3xl font-bold text-white">Ventas</h1>
+        <p className="text-slate-400 mt-1 text-sm">Selecciona productos del catálogo y registra la venta</p>
+      </div>
+
+      {/* ── Tabs mobile ── */}
+      <div className="flex xl:hidden gap-1 bg-slate-900 p-1 rounded-xl border border-slate-800">
+        <button
+          onClick={() => setMobileTab('catalogo')}
+          className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 ${
+            mobileTab === 'catalogo' ? 'bg-slate-700 text-white' : 'text-slate-400'
+          }`}
+        >
+          <Package className="h-4 w-4" /> Catálogo
+        </button>
+        <button
+          onClick={() => setMobileTab('carrito')}
+          className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 relative ${
+            mobileTab === 'carrito' ? 'bg-emerald-600 text-white' : 'text-slate-400'
+          }`}
+        >
+          <ShoppingCart className="h-4 w-4" /> Carrito
+          {cartCount > 0 && (
+            <span className="absolute -top-1 -right-1 bg-emerald-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+              {cartCount}
+            </span>
+          )}
+        </button>
       </div>
 
       {/* ── Main layout: Catálogo + Carrito ── */}
-      <div className="grid grid-cols-1 xl:grid-cols-5 gap-6 items-start">
+      <div className="grid grid-cols-1 xl:grid-cols-5 gap-4 sm:gap-6 items-start">
 
         {/* ── CATÁLOGO (izquierda) ── */}
-        <div className="xl:col-span-3 space-y-4">
+        <div className={`xl:col-span-3 space-y-4 ${mobileTab === 'carrito' ? 'hidden xl:block' : ''}`}>
           {/* Buscador */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -340,7 +367,7 @@ export function VentasClient({
         </div>
 
         {/* ── CARRITO (derecha) ── */}
-        <div className="xl:col-span-2 sticky top-4">
+        <div className={`xl:col-span-2 xl:sticky xl:top-4 ${mobileTab === 'catalogo' ? 'hidden xl:block' : ''}`}>
           <Card className="bg-slate-900 border-slate-800">
             <CardHeader className="pb-3">
               <CardTitle className="text-white flex items-center justify-between">

@@ -128,3 +128,37 @@
     @apply font-sans;
   }
 }
+
+/* ─── Mobile / PWA utilities ─────────────────────────────────────────────────── */
+
+/* Safe area padding para iOS (muesca y barra home) */
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Scroll horizontal suave en tablas mobile */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Previene el zoom en inputs en iOS */
+@media (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Ocultar scrollbar pero mantener funcionalidad */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Altura completa en mobile (sin la barra de navegación del browser) */
+.h-screen-mobile {
+  height: 100dvh;
+}
