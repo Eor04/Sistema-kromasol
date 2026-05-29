@@ -1,0 +1,156 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id               Int       @id @default(autoincrement())
+  name             String    @unique
+  stockInBaseUnits Int       @default(0)
+  imageUrl         String?   // ruta relativa ej: /products/supernova.jpg
+  variants         Variant[]
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model Variant {
+  id              Int              @id @default(autoincrement())
+  productId       Int
+  product         Product          @relation(fields: [productId], references: [id])
+  presentation    String
+  baseContentQty  Int
+  baseUnitName    String
+  defaultPrice    Float            @default(0)   // ← Precio de venta sugerido
+  currentStock    Int              @default(0)   // legacy, no se usa en lógica
+  purchaseDetails PurchaseDetail[]
+  saleDetails     SaleDetail[]
+  kardexMovements Kardex[]
+
+  @@unique([productId, presentation])
+}
+
+model Customer {
+  id        Int      @id @default(autoincrement())
+  name      String
+  phone     String?
+  totalDebt Float    @default(0.0)
+  sales     Sale[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Purchase {
+  id        Int              @id @default(autoincrement())
+  period    String
+  date      DateTime         @default(now())
+  totalCost Float
+  promoType String?
+  details   PurchaseDetail[]
+  createdAt DateTime         @default(now())
+}
+
+model PurchaseDetail {
+  id         Int      @id @default(autoincrement())
+  purchaseId Int
+  purchase   Purchase @relation(fields: [purchaseId], references: [id])
+  variantId  Int
+  variant    Variant  @relation(fields: [variantId], references: [id])
+  quantity   Int
+  unitCost   Float
+}
+
+model Sale {
+  id            Int           @id @default(autoincrement())
+  date          DateTime      @default(now())
+  totalAmount   Float
+  isCredit      Boolean       @default(false)
+  paymentMethod PaymentMethod @default(EFECTIVO)
+  customerId    Int?
+  customer      Customer?     @relation(fields: [customerId], references: [id])
+  details       SaleDetail[]
+  cuotas        Cuota[]
+  createdAt     DateTime      @default(now())
+}
+
+model SaleDetail {
+  id        Int     @id @default(autoincrement())
+  saleId    Int
+  sale      Sale    @relation(fields: [saleId], references: [id])
+  variantId Int
+  variant   Variant @relation(fields: [variantId], references: [id])
+  quantity  Int
+  unitPrice Float
+}
+
+enum MovementType {
+  IN
+  OUT
+  ADJUST
+}
+
+enum PaymentMethod {
+  EFECTIVO
+  QR
+  TRANSFERENCIA
+}
+
+model Kardex {
+  id          Int          @id @default(autoincrement())
+  date        DateTime     @default(now())
+  variantId   Int
+  variant     Variant      @relation(fields: [variantId], references: [id])
+  type        MovementType
+  quantity    Int
+  balance     Int          // balance del producto (stockInBaseUnits) después del movimiento
+  description String
+  referenceId Int?
+}
+
+// ─── Módulo Financiero ────────────────────────────────────────────────────────
+
+enum GastoCategory {
+  TRANSPORTE
+  SERVICIOS
+  PERSONAL
+  MARKETING
+  ALQUILER
+  OTROS
+}
+
+model Gasto {
+  id          Int           @id @default(autoincrement())
+  date        DateTime      @default(now())
+  description String
+  amount      Float
+  category    GastoCategory @default(OTROS)
+  notes       String?
+  createdAt   DateTime      @default(now())
+}
+
+/// Tabla de configuración global (una sola fila, id = 1)
+model Configuracion {
+  id             Int   @id @default(1)
+  capitalInicial Float @default(0)
+}
+
+// ─── Cuotas de pago (ventas a crédito) ───────────────────────────────────────
+
+enum CuotaEstado {
+  PENDIENTE
+  PAGADA
+}
+
+model Cuota {
+  id          Int         @id @default(autoincrement())
+  saleId      Int
+  sale        Sale        @relation(fields: [saleId], references: [id])
+  numeroCuota Int         // 1, 2, 3, 4...
+  monto       Float
+  estado      CuotaEstado @default(PENDIENTE)
+  fechaPago   DateTime?   // fecha en que se confirmó el pago
+  createdAt   DateTime    @default(now())
+}
